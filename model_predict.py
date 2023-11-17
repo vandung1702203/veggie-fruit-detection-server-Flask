@@ -6,6 +6,9 @@ from keras.preprocessing.image import ImageDataGenerator
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 model_1 = tf.keras.models.load_model("./final_model_new.h5")
+
+
+
 batch_size = 128
 
 
