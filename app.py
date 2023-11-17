@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import model_predict
 import os
 from werkzeug.utils import secure_filename
@@ -37,9 +37,10 @@ def create_app():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             label = model_predict.vegetable_predict(class_names, file)
+            session['label'] = label
             flash('Image successfully uploaded and it is ' + label)
             os.remove(file_path)
-            return render_template('index.html')
+            return render_template('index.html', label = label)
         else:
             flash('Allowed image types are - png, jpg, jpeg, gif')
             return redirect(request.url)
