@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 import model_predict
 import os
 from werkzeug.utils import secure_filename
+
+label = ""
 
 
 def create_app():
@@ -36,18 +38,28 @@ def create_app():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            global label
             label = model_predict.vegetable_predict(class_names, file)
-            session['label'] = label
+            # session['label'] = label
             flash('Image successfully uploaded and it is ' + label)
             os.remove(file_path)
-            return render_template('index.html', label = label)
+            return render_template('index.html', label=label)
         else:
             flash('Allowed image types are - png, jpg, jpeg, gif')
             return redirect(request.url)
 
+    @app.route('/getimg', methods=['GET'])
+    def get_img():
+        vegetable = [
+            {'name': label}
+        ]
+        return jsonify(vegetable)
+
+
     @app.route('/display/<filename>')
     def display_image(filename):
         return redirect(url_for('static', filename='uploads/' + filename), code=301)
+
 
     @app.route('/show_pic')
     def show_images():
@@ -55,5 +67,5 @@ def create_app():
         return render_template("gallery.html", image_names=image_names)
 
     return app
-    # if __name__ == "__main__":
-    #     app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
