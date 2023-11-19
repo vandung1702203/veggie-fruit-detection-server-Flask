@@ -3,8 +3,7 @@ import model_predict
 import os
 from werkzeug.utils import secure_filename
 
-label = ""
-
+file_path = ""
 
 def create_app():
     app = Flask(__name__)
@@ -24,9 +23,9 @@ def create_app():
     def home():
         return render_template('index.html')
 
-    @app.route('/', methods=['POST'])
+    @app.route('/get_img', methods=['POST'])
     def upload_image():
-
+        print("aa")
         if 'file' not in request.files:
             flash('No file path')
             return redirect(request.url)
@@ -38,22 +37,17 @@ def create_app():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            global label
             label = model_predict.vegetable_predict(class_names, file)
-            # session['label'] = label
-            flash('Image successfully uploaded and it is ' + label)
+            # flash('Image successfully uploaded and it is ' + label)
             os.remove(file_path)
-            return render_template('index.html', label=label)
+            vegetable ={
+                'name': label
+            }
+            return jsonify(vegetable)
         else:
             flash('Allowed image types are - png, jpg, jpeg, gif')
             return redirect(request.url)
 
-    @app.route('/getimg', methods=['GET'])
-    def get_img():
-        vegetable = [
-            {'name': label}
-        ]
-        return jsonify(vegetable)
 
 
     @app.route('/display/<filename>')
