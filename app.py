@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 
 file_path = ""
 
+
 def create_app():
     app = Flask(__name__)
     class_names = model_predict.GetClassNames()
@@ -40,7 +41,7 @@ def create_app():
             label = model_predict.vegetable_predict(class_names, file)
             # flash('Image successfully uploaded and it is ' + label)
             os.remove(file_path)
-            vegetable ={
+            vegetable = {
                 'name': label
             }
             return jsonify(vegetable)
@@ -48,12 +49,9 @@ def create_app():
             flash('Allowed image types are - png, jpg, jpeg, gif')
             return redirect(request.url)
 
-
-
     @app.route('/display/<filename>')
     def display_image(filename):
         return redirect(url_for('static', filename='uploads/' + filename), code=301)
-
 
     @app.route('/show_pic')
     def show_images():

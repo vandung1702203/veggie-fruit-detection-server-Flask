@@ -39,4 +39,5 @@ def vegetable_predict(class_labels, img_path):
     img = np.expand_dims(img, axis=0)
     prediction = model_1.predict(img)
     predicted_label = class_labels[np.argmax(prediction)]
-    return predicted_label
+    
+    return class_labels.index(predicted_label) + 1
