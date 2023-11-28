@@ -26,28 +26,33 @@ def create_app():
 
     @app.route('/get_img', methods=['POST'])
     def upload_image():
-        print("aa")
         if 'file' not in request.files:
             flash('No file path')
-            return redirect(request.url)
+            return jsonify({
+                'error': "Not file"
+            })
         file = request.files['file']
         if file.filename == '':
-            flash('No image selected for uploading')
-            return redirect(request.url)
+            return jsonify({
+                'error': "No image selected for uploading"
+            })
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             label = model_predict.vegetable_predict(class_names, file)
-            # flash('Image successfully uploaded and it is ' + label)
             os.remove(file_path)
             vegetable = {
                 'name': label
             }
             return jsonify(vegetable)
         else:
-            flash('Allowed image types are - png, jpg, jpeg, gif')
-            return redirect(request.url)
+            
+            return jsonify({
+                'error': "Allowed image types are - png, jpg, jpeg, gif"
+            })
+    # @app.route('/upload')
+    # def get_img():
 
     @app.route('/display/<filename>')
     def display_image(filename):
