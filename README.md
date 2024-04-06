@@ -8,7 +8,7 @@
 ![numpy](https://img.shields.io/badge/numpy-^1.25.2-lightgrey.svg)
 ![tensorflow](https://img.shields.io/badge/tensorflow-^2.0.0-red.svg)
 ![keras](https://img.shields.io/badge/keras-^2.14.0-yellow.svg)
-![Pillow](https://img.shields.io/badge/Pillow-^10.0.0-black.svg)
+![Pillow](https://img.shields.io/badge/Pillow-^10.0.0-purple.svg)
 
 ### Getting Started
 
